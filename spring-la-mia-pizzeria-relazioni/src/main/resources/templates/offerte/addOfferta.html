@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+ <html xmlns:th="http://www.thymeleaf.org">
+ 
+    <head>
+        <div th:insert="fragment :: bootstrapCss"></div>
+
+        <title>Nuova Offerta</title>
+    </head>
+    
+    <body>
+        <div class="container">
+            <div th:insert="fragment :: navbar"></div>
+            
+            <h1 class="text-center my-2 mt-3 text-success">Aggiungi un nuovo sconto</h1>
+            <form id="sconto-form" th:object="${sconto}" th:action="@{/pizzeria/offerte/create}" method="post" >
+                <input type="hidden" th:field="*{pizza.id}" id="pizza">
+            
+                <div class="row d-flex justify-content-center">
+                    <div class="col-8">
+                        <label for="dataOfferta" class="form-label mb-0 mt-2">Inizio Offerta</label>
+                        <input type="date" class="form-control" id="dataOfferta" th:field="*{dataOfferta}" th:errorClass="is-invalid">
+                        <div th:if="${#fields.hasErrors('dataOfferta')}" class="invalid-feedback">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('dataOfferta')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+                    </div>
+            
+                    <div class="col-8">
+                        <label for="dataFineOfferta" class="form-label mb-0 mt-2">Fine Offerta</label>
+                        <input type="date" class="form-control" id="dataFineOfferta" th:field="*{dataFineOfferta}" th:errorClass="is-invalid">
+                        <div th:if="${#fields.hasErrors('dataFineOfferta')}" class="invalid-feedback">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('dataFineOfferta')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+                    </div>
+            
+                    <div class="col-8">
+                        <label for="titolo" class="form-label mb-0 mt-2">Codice</label>
+                        <input type="text" class="form-control" id="titolo" th:field="*{titolo}" th:errorClass="is-invalid">
+                        <div th:if="${#fields.hasErrors('titolo')}" class="invalid-feedback">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('titolo')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+                    </div>
+            
+                    <div class="col-8 mt-3 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success me-3">Aggiungi</button>
+                        <a class="btn btn-danger" th:href="@{|/pizzeria/dettaglio/${sconto.pizza.id}|}">Annulla</a>
+                    </div>
+            
+                </div>
+            </form>
+
+            <div th:insert="fragment :: bootstrapJS"></div>
+    </body>
+ </html>
