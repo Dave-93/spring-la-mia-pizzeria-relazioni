@@ -35,6 +35,7 @@ public class PizzaController {
     @Autowired
     private OffertaRepository offertaRepository;
 
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Double.class,
@@ -102,6 +103,10 @@ public class PizzaController {
     /*Cancellazione*/
     @PostMapping("/cancella/{id}")
     public String cancella(@PathVariable("id") Integer id) {
+        Pizza pizza = pizzaRepository.findById(id).get();
+        for(Offerta of : pizza.getSconti()){
+            offertaRepository.deleteById(of.getId());
+        }
         pizzaRepository.deleteById(id);
         return "redirect:/pizzeria";
     }    
