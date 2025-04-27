@@ -15,7 +15,6 @@
             <h1 class="text-center my-2 text-danger">Modifica la pizza!</h1>
 
             <form id="pizza-form" th:object="${pizza}" th:action="@{|/pizzeria/modifica/${pizza.id}|}" method="post" class="mx-auto col-6">
-
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome</label>
                     <input type="text" class="form-control" id="nome" th:field="*{nome}" th:errorClass="is-invalid">
@@ -40,6 +39,15 @@
                 <div class="mb-3">
                     <label for="foto" class="form-label">Foto</label>
                     <input type="text" class="form-control" id="foto" th:field="*{foto}" th:errorClass="is-invalid">
+                </div>
+
+                <!--Aggiunta Ingredienti-->
+                <div class="col-4">
+                    <h4>Ingredienti</h4>
+                    <div class="form-check" th:each="ing : ${ingredientiList}">
+                        <input type="checkbox" class="form-check-input" th:id="${ing.id}" th:value="${ing.id}" th:field="*{ingredienti}">
+                        <label class="from-check-label" th:for="${ing.id}" th:text="${ing.ingredienti}"></label>
+                    </div> 
                 </div>
 
                 <div class="d-flex justify-content-center gap-3">

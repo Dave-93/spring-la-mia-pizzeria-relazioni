@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.lessons.spring.spring_la_mia_pizzeria_relazioni.model.Offerta;
 import it.lessons.spring.spring_la_mia_pizzeria_relazioni.model.Pizza;
+import it.lessons.spring.spring_la_mia_pizzeria_relazioni.repository.IngredientiRepository;
 import it.lessons.spring.spring_la_mia_pizzeria_relazioni.repository.OffertaRepository;
 import it.lessons.spring.spring_la_mia_pizzeria_relazioni.repository.PizzaRepository;
 import jakarta.validation.Valid;
@@ -30,11 +31,18 @@ import jakarta.validation.Valid;
 @RequestMapping("/pizzeria")
 public class PizzaController {
 
-    @Autowired
     private PizzaRepository pizzaRepository;
-    @Autowired
+
     private OffertaRepository offertaRepository;
 
+    private IngredientiRepository ingredientiRepository;
+
+    @Autowired
+    public PizzaController(PizzaRepository pizzaRepository, OffertaRepository offertaRepository, IngredientiRepository ingredientiRepository){
+        this.pizzaRepository = pizzaRepository;
+        this.offertaRepository = offertaRepository;
+        this.ingredientiRepository = ingredientiRepository;
+    }
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -58,6 +66,7 @@ public class PizzaController {
     @GetMapping("/addPizza")
     public String addPizza(Model model) {
         model.addAttribute("pizza", new Pizza());
+        model.addAttribute("ingredientiList", ingredientiRepository.findAll());
         return "pizzeria/addPizza";
     }
     @PostMapping("/addPizza")
@@ -76,8 +85,9 @@ public class PizzaController {
     @GetMapping("/dettaglio/{id}")
     public String dettaglio(@PathVariable("id") Integer id, Model model) {
         Optional<Pizza> optPizza = pizzaRepository.findById(id);
-        if (optPizza.isPresent()) {
+        if (optPizza.isPresent()) { 
             model.addAttribute("pizza", pizzaRepository.findById(id).get());
+            model.addAttribute("ingredientiList", ingredientiRepository.findAll());
             return "/pizzeria/dettaglio";
         }
         return "redirect:/pizzeria";
@@ -88,6 +98,7 @@ public class PizzaController {
     @GetMapping("/modifica/{id}")
     public String modifica(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("pizza", pizzaRepository.findById(id).get());
+        model.addAttribute("ingredientiList", ingredientiRepository.findAll());
         return "/pizzeria/modifica";
     }
     @PostMapping("/modifica/{id}")
@@ -111,7 +122,7 @@ public class PizzaController {
         return "redirect:/pizzeria";
     }    
     /* */
-
+    //todo add OffertaController???
     /*Sconti*/
     @GetMapping("/{id}/sconti")
     public String sconto(@PathVariable Integer id, Model model) {
@@ -152,15 +163,14 @@ public class PizzaController {
         if (bindingResult.hasErrors()) {
             return "offerte/modificaOfferta";
         }
-
         if (formSconto.getPizza() == null || formSconto.getPizza().getId() == null) {
             // Gestisci l'errore, ad esempio con un messaggio di errore
             model.addAttribute("error", "Pizza non trovata!");
             return "offerte/modificaOfferta";
         }
-        
         offertaRepository.save(formSconto);
         return "redirect:/pizzeria/dettaglio/" + formSconto.getPizza().getId();
     }
     /* */
+    //todo
 }

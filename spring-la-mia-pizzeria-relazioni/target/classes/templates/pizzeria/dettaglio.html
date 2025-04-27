@@ -13,27 +13,36 @@
             <div th:insert="fragment :: navbar"></div>
 
             <div class="container text-center" th:object="${pizza}">
-                <h1 th:text="*{nome}" class="mb-3"></h1>
+                <h1 th:text="*{nome}" class="mb-3 text-danger"></h1>
+                <div class="d-flex">
+                    <!-- Pizza -->
+                    <div class="col-9">
+                        <dl>
+                            <dt>Immagine</dt>
+                            <dd>
+                                <img th:src="*{foto}" alt="Foto della pizza" class="img-fluid" />
+                            </dd>
+                            <dt>Prezzo</dt>
+                            <dd th:text="*{prezzo}"></dd>
+                            <th:block th:if="*{descrizione} != null and *{descrizione} != ''">
+                                <dt>Descrizione</dt>
+                                <dd th:text="*{descrizione}"></dd>
+                            </th:block>
+                        </dl>
+                    </div>
+    
+                    <!-- Ingredienti -->
+                    <div class="col-3">
+                        <h4 class="text-primary">Ingredienti</h4>
+                        <ul>
+                            <li th:each="ing : *{ingredienti}" th:text="${ing.ingredienti}"></li>
+                        </ul>
+                    </div>
 
-                <!-- Pizza -->
-                <div>
-                    <dl>
-                        <dt>Immagine</dt>
-                        <dd>
-                            <img th:src="*{foto}" alt="Foto della pizza" class="img-fluid" />
-                        </dd>
-                        <dt>Prezzo</dt>
-                        <dd th:text="*{prezzo}"></dd>
-                        <th:block th:if="*{descrizione} != null and *{descrizione} != ''">
-                            <dt>Descrizione</dt>
-                            <dd th:text="*{descrizione}"></dd>
-                        </th:block>
-                    </dl>
                 </div>
-
                 <!-- Offerte -->
                 <div>
-                    <h3 class="mt-5">Offerte</h3>
+                    <h3 class="mt-5 text-danger">Offerte</h3>
                     <a class="btn btn-primary mb-3" th:href="@{|/pizzeria/${pizza.id}/sconti|}">
                         Aggiungi Offerta
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
@@ -76,7 +85,7 @@
                         </tbody>
                     </table>
                 </div>
-
+            </div>
         </div>
 
         <div th:insert="fragment :: bootstrapJS"></div>
