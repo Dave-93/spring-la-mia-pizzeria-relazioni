@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.lessons.spring.spring_la_mia_pizzeria_relazioni.model.Ingredienti;
-import it.lessons.spring.spring_la_mia_pizzeria_relazioni.model.Pizza;
-import it.lessons.spring.spring_la_mia_pizzeria_relazioni.repository.IngredientiRepository;
+import it.lessons.spring.spring_la_mia_pizzeria_relazioni.service.IngredientiService;
 import jakarta.validation.Valid;
 
 
@@ -22,19 +21,19 @@ import jakarta.validation.Valid;
 public class IngredientiController {
 
     @Autowired
-    private IngredientiRepository ingredientiRepository;
+    private IngredientiService service;
     
     /*Creazione Ingredienti*/
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("list", ingredientiRepository.findAll());
+        model.addAttribute("list", service.findAllCategories());
         model.addAttribute("ingredientiObj", new Ingredienti());
         return "ingredienti/index";
     }
     @PostMapping("/create")
     public String aggiunta(@Valid @ModelAttribute("ingredientiObj") Ingredienti ingredienti, BindingResult bindingResult) {
         if(!bindingResult.hasErrors()){
-            ingredientiRepository.save(ingredienti);
+            service.create(ingredienti);
         }
         return "redirect:/ingredienti";
     }
@@ -43,11 +42,7 @@ public class IngredientiController {
     /*Cancellazione*/
     @PostMapping("/delete/{id}")
     public String cancellazione(@PathVariable int id, Model model){
-        Ingredienti ing = ingredientiRepository.findById(id).get();
-        for(Pizza p : ing.getPizza()){
-            p.getIngredienti().remove(ing);
-        }
-        ingredientiRepository.deleteById(id);
+        service.deleteById(id);
         return "redirect:/ingredienti";
     }
     /* */
